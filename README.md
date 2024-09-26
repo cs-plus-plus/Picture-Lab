@@ -1,4 +1,4 @@
-## Picture Lab
+# Picture Lab
 
 ### Project Summary
 
