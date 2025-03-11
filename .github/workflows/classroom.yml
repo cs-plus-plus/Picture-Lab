@@ -1,0 +1,90 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: testKeepOnlyBlue
+      id: testkeeponlyblue
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testKeepOnlyBlue
+        setup-command: mvn compile
+        command: mvn -Dtest=PictureTest#testKeepOnlyBlue test
+        timeout: 3
+        max-score: 10
+    - name: 'testNegate '
+      id: testnegate
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'testNegate '
+        setup-command: mvn compile
+        command: mvn -Dtest=PictureTest#testNegate test
+        timeout: 3
+        max-score: 10
+    - name: 'testGrayscale '
+      id: testgrayscale
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'testGrayscale '
+        setup-command: mvn compile
+        command: mvn -Dtest=PictureTest#testGrayscale test
+        timeout: 3
+        max-score: 10
+    - name: 'testMirrorVerticalRightToLeft '
+      id: testmirrorverticalrighttoleft
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'testMirrorVerticalRightToLeft '
+        setup-command: mvn compile
+        command: mvn -Dtest=PictureTest#testMirrorVerticalRightToLeft test
+        timeout: 3
+        max-score: 10
+    - name: testMirrorArms
+      id: testmirrorarms
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testMirrorArms
+        setup-command: mvn compile
+        command: mvn -Dtest=PictureTest#testMirrorArms test
+        timeout: 3
+        max-score: 15
+    - name: testMirrorGull
+      id: testmirrorgull
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testMirrorGull
+        setup-command: mvn compile
+        command: mvn -Dtest=PictureTest#testMirrorGull test
+        timeout: 3
+        max-score: 15
+    - name: 'testEdgeDetection2 '
+      id: testedgedetection2
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'testEdgeDetection2 '
+        setup-command: mvn compile
+        command: mvn -Dtest=PictureTest#testEdgeDetection2 test
+        timeout: 3
+        max-score: 30
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TESTKEEPONLYBLUE_RESULTS: "${{steps.testkeeponlyblue.outputs.result}}"
+        TESTNEGATE_RESULTS: "${{steps.testnegate.outputs.result}}"
+        TESTGRAYSCALE_RESULTS: "${{steps.testgrayscale.outputs.result}}"
+        TESTMIRRORVERTICALRIGHTTOLEFT_RESULTS: "${{steps.testmirrorverticalrighttoleft.outputs.result}}"
+        TESTMIRRORARMS_RESULTS: "${{steps.testmirrorarms.outputs.result}}"
+        TESTMIRRORGULL_RESULTS: "${{steps.testmirrorgull.outputs.result}}"
+        TESTEDGEDETECTION2_RESULTS: "${{steps.testedgedetection2.outputs.result}}"
+      with:
+        runners: testkeeponlyblue,testnegate,testgrayscale,testmirrorverticalrighttoleft,testmirrorarms,testmirrorgull,testedgedetection2
